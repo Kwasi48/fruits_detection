@@ -4,11 +4,14 @@ import torch
 import torch.nn as nn
 from PIL import Image
 import torchvision.transforms as transforms
+import torch.serialization
+torch.serialization.add_safe_globals([SimpleCNN])
+
 
 # Define SimpleCNN class (copied from your training script)
 class SimpleCNN(nn.Module):
-    def _init_(self, num_classes=5):
-        super(SimpleCNN, self)._init_()
+    def __init__(self, num_classes=5):
+        super(SimpleCNN, self).__init__()
         
         # Convolutional layers
         self.conv1 = nn.Conv2d(3, 32, kernel_size=3, padding=1)
@@ -62,7 +65,7 @@ classes = ["apple", "banana", "grape", "mango", "strawberry"]
 # Load the model
 @st.cache_resource
 def load_model():
-    model = torch.load('fruit_model.pt', map_location='cpu', weights_only=True)
+    model = torch.load('fruit_model.pt', map_location='cpu', weights_only=False)
     model.eval()
     return model
 
